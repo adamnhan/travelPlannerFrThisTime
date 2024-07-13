@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# Travel Planner Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
 
-## Available Scripts
+This is a Travel Planner project built with React. It is designed to help users organize trip planning among friends, including voting on events, booking flights, and hotels.
 
-In the project directory, you can run:
+## Prerequisites
 
-### `npm start`
+Before you begin, ensure you have the following installed on your machine:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Node.js](https://nodejs.org/en/download/) (which includes npm)
+- [Git](https://git-scm.com/downloads)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup Instructions
 
-### `npm test`
+Follow these steps to set up the project on your local machine:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1. Clone the Repository
 
-### `npm run build`
+First, clone the repository to your local machine:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/your-username/travelPlannerFrThisTime.git
+cd travelPlannerFrThisTime
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Install Dependencies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Once you're cd in the project, run
 
-### `npm run eject`
+```bash
+npm install
+```
+let it run for a bit and once its done do
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm install slick-carousel react-slick
+```
+```bash
+npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion
+```
+these are the ui things we're using. If you want to add more dependencies lmk.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+You can start the project with 
+```bash
+npm start
+```
+everything should be working correctly, if it doesnt then lmk
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## CONTRIBUTING
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Once everything is set up and the dev server is working for you, you can start making changes by creating a separate branch in github, name it accordingly, and then navigating to that branch within your vscode.
 
-## Learn More
+This command navigates to the newly created branch:
+```bash
+git checkout name-of-ur-branch
+```
+on the bottom left of ur vscode you should see your branch name if you've correctly navigated to it, you can also confirm by doing 
+```bash
+git branch
+```
+the asterisk indicates which branch youre on.
+When you're in the new branch, vscode has a git control button on the left sidebar, once you're ready to commit changes, the commit button will be enabled and you can commit ur stuff.
+To commit you need to 'stage' your changes, if it asks you to stage just press yes, and itll commit for you. Also make sure to put a commit message at the top of the blue commit button, it wont let you commit unless you put something in so make sure to put something meaningful so i know whats happening.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+###merge request
+Once you're satisfied with your commits and you think that ur done, go to github and create a merge request for the main branch so i can look over and resolve conflicts, and then we can go from there.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
