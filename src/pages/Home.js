@@ -6,6 +6,7 @@ import img1 from '../materials/cardimg1.jpg';
 import img2 from '../materials/cardimg2.jpg';
 import img3 from '../materials/cardimg3.jpg';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 
 const Home = () => {
@@ -20,12 +21,14 @@ const Home = () => {
             <Box className='absolute bottom-0 right-0 p-4'>
                 <h1 className='text-9xl font-bold text-white pr-10 pb-10'>Just Got <span className='bg-gradient-to-r from-white to-blue-500 bg-clip-text text-transparent'>Easier.</span></h1>
             </Box>
-        <Button
-          className='absolute left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gray-600 to-blue-500 text-white rounded-full px-10 py-4 text-xl'
-          style={{ top: '50%', zIndex: 11 }}
-        >
-          Get Started
-        </Button>
+          <Link to="/calendar">
+            <Button
+              className='absolute left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gray-600 to-blue-500 text-white rounded-full px-10 py-4 text-xl'
+              style={{ top: '50%', zIndex: 11 }}
+            >
+              Get Started
+            </Button>
+          </Link>
         </Box>
       </Box>
       {/* Card Section */}
