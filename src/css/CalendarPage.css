@@ -1,0 +1,30 @@
+/* CalendarPage.css */
+
+/* Center the date numbers in the top middle of each cell */
+.custom-calendar .rbc-date-cell {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    padding-top: 0.5rem;
+    font-weight: bold;
+  }
+  
+  /* Adjust the cell height if necessary */
+  .custom-calendar .rbc-time-content > * + * > * {
+    min-height: 4rem !important;
+  }
+  
+  .custom-calendar .rbc-day-slot .rbc-time-slot {
+    height: 4rem !important;
+    border-bottom: 1px solid #e2e8f0; /* Tailwind color for gray-300 */
+  }
+  
+  .custom-calendar .rbc-time-header-content {
+    border-bottom: 1px solid #e2e8f0; /* Tailwind color for gray-300 */
+  }
+  
+  .custom-calendar .rbc-header {
+    padding: 1rem 0;
+  }
+  
