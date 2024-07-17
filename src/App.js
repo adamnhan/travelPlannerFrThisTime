@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import TripDashboard from './pages/TripDashboard';
 import Header from './components/Header';
 import CalendarPage from './pages/CalendarPage';
+import BookingsPage from './pages/BookingsPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<TripDashboard />} />
         <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/bookings" element={<BookingsPage />} />
       </Routes>
     </Router>
   );

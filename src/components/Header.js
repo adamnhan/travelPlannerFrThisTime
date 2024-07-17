@@ -14,6 +14,9 @@ const Header = () => {
           <Button as={Link} to="/dashboard" variant="link" className="text-black">
             Dashboard
           </Button>
+          <Button as={Link} to="/bookings" variant="link" className="text-black">
+            Bookings
+          </Button>
           <Button as={Link} to="/about" variant="link" className="text-black">
             About
           </Button>
