@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
 import TripCard from '../components/Card'; // Adjust the import path as needed
-import Modal from 'react-modal'; // Import a modal library
 
 // Setting the modal root element for accessibility
 Modal.setAppElement('#root');
 
 const TripDashboard = () => {
-  const [trips, setTrips] = useState([
-    { id: 1, name: 'Trip to Paris', description: 'A wonderful trip to Paris', backgroundImage: 'path/to/paris.jpg' },
-    { id: 2, name: 'Weekend in New York', description: 'A weekend trip to New York', backgroundImage: 'path/to/ny.jpg' }
-  ]);
+  const [trips, setTrips] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newTrip, setNewTrip] = useState({ name: '', description: '', backgroundImage: '' });
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/trips');
+        const data = await response.json();
+        console.log('Fetched trips:', data); // Log the fetched data
+        if (Array.isArray(data)) {
+          setTrips(data);
+        } else {
+          console.error('Fetched data is not an array:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching trips:', error);
+      }
+    };
+
+    fetchTrips();
+  }, []);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -35,10 +51,22 @@ const TripDashboard = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleCreateTrip = () => {
-    setTrips([...trips, { ...newTrip, id: trips.length + 1 }]);
-    setNewTrip({ name: '', description: '', backgroundImage: '' });
-    closeModal();
+  const handleCreateTrip = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/trips', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTrip),
+      });
+      const data = await response.json();
+      setTrips([...trips, data]);
+      setNewTrip({ name: '', description: '', backgroundImage: '' });
+      closeModal();
+    } catch (error) {
+      console.error('Error creating trip:', error);
+    }
   };
 
   return (
@@ -53,15 +81,19 @@ const TripDashboard = () => {
         Create Trip
       </button>
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {trips.map(trip => (
-          <TripCard 
-            key={trip.id}
-            title={trip.name}
-            description={trip.description}
-            buttonText="View Trip"
-            backgroundImage={trip.backgroundImage}
-          />
-        ))}
+        {Array.isArray(trips) ? (
+          trips.map(trip => (
+            <TripCard 
+              key={trip.id}
+              title={trip.name}
+              description={trip.description}
+              buttonText="View Trip"
+              backgroundImage={trip.backgroundImage}
+            />
+          ))
+        ) : (
+          <p>No trips available</p>
+        )}
       </div>
 
       <Modal 
