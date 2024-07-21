@@ -1,8 +1,15 @@
 // server.js
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const Amadeus = require('amadeus');
+
+
+
+console.log('Amadeus API Key:', process.env.REACT_APP_AMADEUS_API_KEY); // Debugging line
+console.log('Amadeus API Secret:', process.env.REACT_APP_AMADEUS_API_SECRET); //
 
 // Initialize Express and middleware
 const app = express();
@@ -16,6 +23,11 @@ const pool = new Pool({
   database: 'travelPlanner',
   password: 'Integrity2019!',
   port: 5432,
+});
+
+const amadeus = new Amadeus({
+  clientId: process.env.REACT_APP_AMADEUS_API_KEY,
+  clientSecret: process.env.REACT_APP_AMADEUS_API_SECRET
 });
 
 // Endpoint to get all trips
@@ -41,6 +53,29 @@ app.post('/api/trips', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// New endpoint to fetch city suggestions
+app.get('/api/city-suggestions', async (req, res) => {
+  const { keyword } = req.query;
+  if (!keyword) {
+    return res.status(400).json({ error: 'Keyword is required' });
+  }
+
+  try {
+    const response = await amadeus.referenceData.locations.get({
+      keyword: keyword,
+      subType: 'CITY,AIRPORT'
+    });
+    const suggestions = response.data.map(location => ({
+      value: location.iataCode,
+      label: `${location.name} (${location.iataCode})`
+    }));
+    res.json(suggestions);
+  } catch (error) {
+    console.error('Error fetching city suggestions:', error);
+    res.status(500).json({ error: 'Failed to fetch city suggestions' });
   }
 });
 
