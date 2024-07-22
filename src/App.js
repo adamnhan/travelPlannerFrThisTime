@@ -5,6 +5,7 @@ import TripDashboard from './pages/TripDashboard';
 import Header from './components/Header';
 import CalendarPage from './pages/CalendarPage';
 import BookingsPage from './pages/BookingsPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<TripDashboard />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );
