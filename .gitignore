@@ -23,5 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 .env
 src/components/firebase.js
+.travel-planner-82f03-firebase-adminsdk-e16zt-b8969aa3e6.json
 
 .vercel

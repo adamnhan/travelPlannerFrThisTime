@@ -1,8 +1,8 @@
 // src/SignIn.js
 import React, { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
-
-const SignIn = () => {
+const SignIn = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,8 +10,9 @@ const SignIn = () => {
   const handleSignIn = async (event) => {
     event.preventDefault();
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       alert('Signed in successfully!');
+      onSuccess();
     } catch (error) {
       setError(error.message);
     }

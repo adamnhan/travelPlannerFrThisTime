@@ -5,11 +5,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
 const Amadeus = require('amadeus');
+const admin = require('firebase-admin');
+const serviceAccount = require('../travel-planner-82f03-firebase-adminsdk-e16zt-b8969aa3e6.json');
 
-
-
-console.log('Amadeus API Key:', process.env.REACT_APP_AMADEUS_API_KEY); // Debugging line
-console.log('Amadeus API Secret:', process.env.REACT_APP_AMADEUS_API_SECRET); //
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 // Initialize Express and middleware
 const app = express();
@@ -26,14 +27,31 @@ const pool = new Pool({
 });
 
 const amadeus = new Amadeus({
-  clientId: process.env.REACT_APP_AMADEUS_API_KEY,
-  clientSecret: process.env.REACT_APP_AMADEUS_API_SECRET
+  clientId: 'dfjleZRmATkTuOZml4WrfkvQmtW0VfGu',
+  clientSecret: 'yGsDc4pVAVgsbxIk'
 });
 
-// Endpoint to get all trips
-app.get('/api/trips', async (req, res) => {
+const verifyToken = async (req, res, next) => {
+  const idToken = req.headers.authorization?.split('Bearer ')[1];
+
+  if (!idToken) {
+    return res.status(401).send('Unauthorized');
+  }
+
   try {
-    const result = await pool.query('SELECT * FROM trips');
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    return res.status(401).send('Unauthorized');
+  }
+};
+
+// Endpoint to get all trips
+app.get('/api/trips',verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.uid;
+    const result = await pool.query('SELECT * FROM trips WHERE user_id = $1', [userId]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -42,12 +60,13 @@ app.get('/api/trips', async (req, res) => {
 });
 
 // Endpoint to create a new trip
-app.post('/api/trips', async (req, res) => {
-  const { name, description, backgroundImage } = req.body;
+app.post('/api/trips', verifyToken, async (req, res) => {
+  const { name, description, backgroundImage} = req.body;
+  const userId = req.user.uid
   try {
     const result = await pool.query(
-      'INSERT INTO trips (name, description, background_image) VALUES ($1, $2, $3) RETURNING *',
-      [name, description, backgroundImage]
+      'INSERT INTO trips (name, description, background_image, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, description, backgroundImage, userId]
     );
     res.json(result.rows[0]);
   } catch (err) {

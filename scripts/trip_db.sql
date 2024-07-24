@@ -10,8 +10,10 @@ CREATE DATABASE your_database;
 CREATE TABLE trips (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  description TEXT NOT NULL,
-  background_image TEXT
+  description TEXT,
+  background_image TEXT,
+  user_id VARCHAR(255) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Insert sample data

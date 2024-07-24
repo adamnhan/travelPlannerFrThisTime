@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import TripCard from '../components/Card'; // Adjust the import path as needed
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 // Setting the modal root element for accessibility
 Modal.setAppElement('#root');
 
@@ -9,25 +9,40 @@ const TripDashboard = () => {
   const [trips, setTrips] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newTrip, setNewTrip] = useState({ name: '', description: '', backgroundImage: '' });
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    const fetchTrips = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/trips');
-        const data = await response.json();
-        console.log('Fetched trips:', data); // Log the fetched data
-        if (Array.isArray(data)) {
-          setTrips(data);
-        } else {
-          console.error('Fetched data is not an array:', data);
-        }
-      } catch (error) {
-        console.error('Error fetching trips:', error);
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid)
+        const displayName = user.displayName ? user.displayName.split(' ')[0] : 'User';
+        setUserName(displayName);
+        const idToken = await user.getIdToken();
+        fetchTrips(idToken);
       }
-    };
-
-    fetchTrips();
+    });
   }, []);
+
+  const fetchTrips = async (idToken) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/trips', {
+        headers: {
+          Authorization: `Bearer ${idToken}`
+        }
+      });
+      const data = await response.json();
+      console.log('Fetched trips:', data); // Log the fetched data
+      if (Array.isArray(data)) {
+        setTrips(data);
+      } else {
+        console.error('Fetched data is not an array:', data);
+      }
+    } catch (error) {
+      console.error('Error fetching trips:', error);
+    }
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -53,12 +68,18 @@ const TripDashboard = () => {
 
   const handleCreateTrip = async () => {
     try {
+      if (!userId) {
+        console.error('User not logged in');
+        return
+      }
+      const idToken = await getAuth().currentUser.getIdToken();
       const response = await fetch('http://localhost:5000/api/trips', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`
         },
-        body: JSON.stringify(newTrip),
+        body: JSON.stringify({ ...newTrip, userId }),
       });
       const data = await response.json();
       setTrips([...trips, data]);
@@ -72,7 +93,7 @@ const TripDashboard = () => {
   return (
     <div className="flex flex-col items-center h-screen bg-gray-100 p-6">
       <div className="w-full text-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Welcome user!</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Welcome {userName}</h1>
       </div>
       <button 
         className="bg-white text-gray-800 border-2 border-gray-800 px-6 py-2 text-lg font-bold rounded-md hover:bg-gray-800 hover:text-white transition duration-300 mb-6"

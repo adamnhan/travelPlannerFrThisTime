@@ -1,18 +1,34 @@
 // src/SignUp.js
 import React, { useState } from 'react';
 import { auth } from './firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
-const SignUp = () => {
+const SignUp = ({ onSuccess }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSignUp = async (event) => {
     event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user
+
+      await updateProfile(user, {
+        displayName: firstName
+      });
+      
       alert('Account created successfully!');
+      onSuccess();
     } catch (error) {
       setError(error.message);
     }
@@ -23,6 +39,28 @@ const SignUp = () => {
       <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSignUp} className="space-y-4">
+        <div>
+          <label htmlFor='firstName' className='block text-gray-700'>First Name:</label>
+          <input
+            type='text'
+            id="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            className='w-full p-2 border rounded'
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor='lastName' className='block text-gray-700'>Last Name:</label>
+          <input
+            type='text'
+            id="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className='w-full p-2 border rounded'
+            required
+          />
+        </div>
         <div>
           <label htmlFor="email" className="block text-gray-700">Email:</label>
           <input
@@ -42,6 +80,17 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor='confirmPassword' className='block text-gray-700'>Confirm Password:</label>
+          <input
+            type='password'
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className='w-full p-2 border rounded'
             required
           />
         </div>

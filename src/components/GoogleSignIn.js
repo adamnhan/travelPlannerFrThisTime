@@ -3,11 +3,12 @@ import React from 'react';
 import { signInWithPopup } from 'firebase/auth'; // Import signInWithPopup
 import { auth, googleProvider } from './firebase'; // Import auth and googleProvider
 
-const GoogleSignIn = () => {
+const GoogleSignIn = ({ onSuccess }) => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
       alert('Signed in with Google successfully!');
+      onSuccess();
     } catch (error) {
       console.error('Error signing in with Google:', error);
     }
